@@ -778,11 +778,4 @@ BEGIN
     RAISE NOTICE '========================================';
 END $$;
 
--- Uncomment to see sample movie titles after setup:
--- SELECT title, release_year, imdb_rating
--- FROM movies
--- WHERE title NOT LIKE 'Movie %' AND title NOT LIKE '%Mysterious%'
--- ORDER BY random()
--- LIMIT 10;
-
 -- End of movies_dataset.sql

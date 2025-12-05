@@ -7,6 +7,16 @@ Synthetic movie ratings database for PostgreSQL training exercises covering adva
 1. **movies_dataset.sql** - Creates schema and loads ~80,000 records of movie data
 2. **seed_monitoring_data.sql** - Populates query performance statistics
 
+## Prerequisites
+
+- **PostgreSQL**: Version 16+ (tested on PostgreSQL 17)
+- **Disk Space**: ~50MB per database instance
+- **Extensions**:
+  - `hstore` (auto-installed by script)
+  - `pg_stat_statements` (auto-installed by monitoring script)
+- **Permissions**: Database creation privileges and ability to install extensions
+- **Estimated Setup Time**: 3-5 minutes per database
+
 ## How to Run
 
 **Recommended database name:** `movies_db`
