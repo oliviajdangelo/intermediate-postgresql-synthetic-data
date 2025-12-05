@@ -1,78 +1,10 @@
 # Intermediate PostgreSQL - Synthetic Training Dataset
 
-Synthetic movie ratings database for PostgreSQL training exercises covering advanced data types, indexing, query optimization, and performance tuning.
-
-## Files Included
-
-1. **movies_dataset.sql** - Creates schema and loads ~80,000 records of movie data
-2. **seed_monitoring_data.sql** - Populates query performance statistics
-
-## Prerequisites
-
-- **PostgreSQL**: Version 16+ (tested on PostgreSQL 17)
-- **Disk Space**: ~50MB per database instance
-- **Extensions**:
-  - `hstore` (auto-installed by script)
-  - `pg_stat_statements` (auto-installed by monitoring script)
-- **Permissions**: Database creation privileges and ability to install extensions
-- **Estimated Setup Time**: 3-5 minutes per database
-
-## How to Run
-
-**Recommended database name:** `movies_db`
-
-### Step 1: Load the dataset (Required)
-```bash
-psql -d movies_db -f movies_dataset.sql
-```
-**Time**: ~3-5 minutes
-**Creates**: All tables, ~500 movies, ~5000 users, ~75,000 ratings
-
-### Step 2: Seed monitoring data (Optional but Recommended)
-```bash
-psql -d movies_db -f seed_monitoring_data.sql
-```
-**Time**: ~30 seconds
-**Creates**: Query statistics in pg_stat_statements for performance exercises
-
-This script runs various slow queries to populate pg_stat_statements with realistic performance data. While not essential, running some or all of these queries will be helpful to demonstrate query performance monitoring, EXPLAIN ANALYZE, and optimization techniques during training.
-
-## Verify Setup
-
-```sql
--- Check record counts
-SELECT
-    (SELECT COUNT(*) FROM movies) AS movies,
-    (SELECT COUNT(*) FROM users) AS users,
-    (SELECT COUNT(*) FROM ratings) AS ratings;
-
--- Expected: ~500 movies, 5000 users, ~75,000 ratings
-```
-
-## Adjusting Dataset Size (Optional)
-
-If the dataset is too large or load times are too long, you can reduce the size by editing `movies_dataset.sql`:
-
-**Line 292** - Reduce number of users:
-```sql
-FROM generate_series(1, 5000) AS gs  -- Change 5000 to 2000 for smaller dataset
-```
-
-**Line 430** - Reduce ratings per movie:
-```sql
-LIMIT (100 + (floor(random() * 101))::INT)  -- Change to (20 + (floor(random() * 81))::INT) for smaller dataset
-```
-
-**Smaller settings** (2000 users, 20-100 ratings/movie):
-- Creates ~30,000 ratings instead of ~75,000
-- Load time: ~1-2 minutes per database
-- Total setup: ~20-40 minutes for 20 databases
-
-**Note:** The larger dataset (75K ratings) is recommended for clearer performance demonstrations, but the smaller version will work if needed.
+Realistic movie ratings database with ~140,000 rows designed for intermediate PostgreSQL training: advanced data types, indexing, query optimization, and performance tuning.
 
 ## What Gets Created
 
-**9 Tables with ~140,000 total rows:**
+**9 Tables with ~140,000 total rows (~30-50MB):**
 
 | Table | Rows | Description |
 |-------|------|-------------|
@@ -86,17 +18,51 @@ LIMIT (100 + (floor(random() * 101))::INT)  -- Change to (20 + (floor(random() *
 | watchlist | ~56,000 | 5-20 movies per user watchlist |
 | popularity_cache | 500 | Cached aggregates for UPDATE contention demos |
 
-**Database Size:** ~30-50MB
-
 **Key Features:**
-- Advanced data types: JSONB metadata, TEXT[] arrays, HSTORE preferences, TSVECTOR for full-text search
-- Realistic data patterns: popularity bias, rating correlations, recency effects, temporal patterns
-- Reproducible data: Uses random seed so all database instances have identical data
-- Pre-populated pg_stat_statements for monitoring exercises
+- Advanced data types: JSONB, TEXT[], HSTORE, TSVECTOR
+- Realistic patterns: popularity bias, rating correlations, temporal trends
+- Reproducible: Same data across all instances (uses random seed)
+- Intentional data quality issues for teaching
+- Extensions: hstore, pg_stat_statements (auto-installed)
 
-**Extensions Used:**
-- hstore, pg_stat_statements
+## Prerequisites
+
+- PostgreSQL 16+ (tested on PostgreSQL 17)
+- ~50MB disk space per database instance
+- Database creation privileges and extension installation permissions
+- Setup time: 3-5 minutes per database
+
+## Quick Start
+
+**Recommended database name:** `movies_db`
+
+```bash
+# Step 1: Load dataset (required)
+psql -d movies_db -f movies_dataset.sql
+
+# Step 2: Seed monitoring data (optional but recommended)
+psql -d movies_db -f seed_monitoring_data.sql
+```
+
+The monitoring script populates pg_stat_statements with slow query patterns for performance tuning exercises. While optional, it's helpful for demonstrating EXPLAIN ANALYZE and optimization techniques.
+
+**Verify setup:**
+```sql
+SELECT
+    (SELECT COUNT(*) FROM movies) AS movies,
+    (SELECT COUNT(*) FROM users) AS users,
+    (SELECT COUNT(*) FROM ratings) AS ratings;
+-- Expected: 500 movies, 5000 users, ~75,000 ratings
+```
+
+## Advanced Options
+
+**Reduce dataset size:** If 3-5 minute load times are too long, edit `movies_dataset.sql`:
+- **Line 321**: Change `generate_series(1, 5000)` to `generate_series(1, 2000)` for fewer users
+- **Line 488**: Change rating limit from `100-200` to `20-100` per movie
+
+This creates ~30,000 ratings instead of ~75,000 (load time: 1-2 minutes). The larger dataset is recommended for clearer performance demonstrations.
 
 ---
 
-That's it! Students will have all data pre-loaded and ready for class.
+Ready for training! All data is synthetic and safe for educational use.
