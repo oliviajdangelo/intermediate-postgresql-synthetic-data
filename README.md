@@ -60,13 +60,26 @@ LIMIT (100 + (floor(random() * 101))::INT)  -- Change to (20 + (floor(random() *
 
 ## What Gets Created
 
-**8 Tables:**
-- movies, people, users, ratings, genres, movie_cast, movie_genres, watchlist, popularity_cache
+**9 Tables with ~140,000 total rows:**
+
+| Table | Rows | Description |
+|-------|------|-------------|
+| movies | 500 | Movies with JSONB metadata, TEXT[] tags, TSVECTOR search |
+| people | 308 | Actors, directors, producers (includes 8 animal actors) |
+| genres | 15 | Standard movie genres |
+| movie_cast | ~2,750 | 3-8 cast members per movie with genre-aware character names |
+| movie_genres | ~1,000 | 1-3 genres per movie |
+| users | 5,000 | Users with HSTORE preferences |
+| ratings | ~75,000 | Variable ratings per movie (30-300 based on popularity/recency) |
+| watchlist | ~56,000 | 5-20 movies per user watchlist |
+| popularity_cache | 500 | Cached aggregates for UPDATE contention demos |
+
+**Database Size:** ~30-50MB
 
 **Key Features:**
-- JSONB metadata, TEXT[] arrays, HSTORE preferences, TSVECTOR for full-text search
-- Realistic data patterns (popularity bias, rating correlations, recency effects)
-- Intentional data quality issues for teaching
+- Advanced data types: JSONB metadata, TEXT[] arrays, HSTORE preferences, TSVECTOR for full-text search
+- Realistic data patterns: popularity bias, rating correlations, recency effects, temporal patterns
+- Reproducible data: Uses random seed so all database instances have identical data
 - Pre-populated pg_stat_statements for monitoring exercises
 
 **Extensions Used:**

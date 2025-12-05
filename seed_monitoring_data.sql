@@ -10,6 +10,9 @@ CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
 -- Reset pg_stat_statements to start fresh
 SELECT pg_stat_statements_reset();
 
+-- Set random seed for reproducible query patterns across all database instances
+SELECT setseed(0.43);
+
 ------------------------------------------------------------
 -- 1. Repeated wildcard searches (slow due to seq scans)
 ------------------------------------------------------------
