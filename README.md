@@ -1,6 +1,6 @@
 # Intermediate PostgreSQL - Synthetic Training Dataset
 
-Realistic movie ratings database with ~140,000 rows designed for intermediate PostgreSQL training: advanced data types, indexing, query optimization, and performance tuning.
+Realistic movie ratings database with ~140,000 rows designed for intermediate PostgreSQL training: advanced data types, indexing, query optimization, and performance tuning. All content is synthetically generated and safe for corporate training use.
 
 ## What Gets Created
 
@@ -62,7 +62,3 @@ SELECT
 - **Line 488**: Change rating limit from `100-200` to `20-100` per movie
 
 This creates ~30,000 ratings instead of ~75,000 (load time: 1-2 minutes). The larger dataset is recommended for clearer performance demonstrations.
-
----
-
-Ready for training! All data is synthetic and safe for educational use.
