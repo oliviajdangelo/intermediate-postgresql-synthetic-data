@@ -9,18 +9,20 @@ Synthetic movie ratings database for PostgreSQL training exercises covering adva
 
 ## How to Run
 
+**Recommended database name:** `movies_db`
+
 Run these scripts **in order** on each database instance:
 
 ### Step 1: Load the dataset
 ```bash
-psql -d your_database_name -f movies_dataset.sql
+psql -d movies_db -f movies_dataset.sql
 ```
 **Time**: ~3-5 minutes
 **Creates**: All tables, ~500 movies, ~5000 users, ~75,000 ratings
 
 ### Step 2: Seed monitoring data
 ```bash
-psql -d your_database_name -f seed_monitoring_data.sql
+psql -d movies_db -f seed_monitoring_data.sql
 ```
 **Time**: ~30 seconds
 **Creates**: Query statistics in pg_stat_statements for performance exercises
