@@ -588,10 +588,12 @@ FROM rating_base rb;
 -- Seed watchlist (for JOIN exercises and locking scenarios)
 ------------------------------------------------------------
 
-INSERT INTO watchlist (user_id, movie_id, watched)
+INSERT INTO watchlist (user_id, movie_id, added_at, watched)
 SELECT
     u.user_id,
     m.movie_id,
+    -- Realistic added_at: after user signup and movie creation
+    GREATEST(u.created_at, m.created_at) + (random() * (NOW() - GREATEST(u.created_at, m.created_at))) AS added_at,
     -- Realistic watched status: if user rated it, likely watched (90%), otherwise 20%
     CASE
         WHEN EXISTS (
@@ -602,7 +604,7 @@ SELECT
     END AS watched
 FROM users u
 CROSS JOIN LATERAL (
-    SELECT movie_id
+    SELECT movie_id, created_at
     FROM movies
     ORDER BY random()
     LIMIT (5 + (random() * 15)::INT)  -- 5-20 movies per watchlist
@@ -613,13 +615,24 @@ ON CONFLICT (user_id, movie_id) DO NOTHING;
 -- Seed popularity_cache (for UPDATE contention scenarios)
 ------------------------------------------------------------
 
-INSERT INTO popularity_cache (movie_id, view_count, avg_rating, rating_count)
+INSERT INTO popularity_cache (movie_id, view_count, avg_rating, rating_count, last_updated)
 SELECT
     m.movie_id,
     (random() * 1000000)::BIGINT,  -- 0-1M views
     (SELECT AVG(rating) FROM ratings r WHERE r.movie_id = m.movie_id),
-    (SELECT COUNT(*) FROM ratings r WHERE r.movie_id = m.movie_id)
-FROM movies m;
+    rating_count,
+    -- Realistic last_updated: popular movies (more ratings) updated more recently
+    NOW() - (
+        CASE
+            WHEN rating_count > 200 THEN (random() * 30)::INT      -- Popular: last 30 days
+            WHEN rating_count > 100 THEN (random() * 60)::INT      -- Moderate: last 60 days
+            ELSE (random() * 180)::INT                              -- Less popular: last 180 days
+        END * INTERVAL '1 day'
+    ) AS last_updated
+FROM movies m
+CROSS JOIN LATERAL (
+    SELECT COUNT(*)::INT AS rating_count FROM ratings r WHERE r.movie_id = m.movie_id
+) rc;
 
 ------------------------------------------------------------
 -- Update full-text search vectors
