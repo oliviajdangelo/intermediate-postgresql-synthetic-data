@@ -60,5 +60,6 @@ SELECT
 **Reduce dataset size:** If 3-5 minute load times are too long, edit `movies_dataset.sql`:
 - **Line 321**: Change `generate_series(1, 5000)` to `generate_series(1, 2000)` for fewer users
 - **Line 488**: Change rating limit from `100-200` to `20-100` per movie
+- **Line 610**: Change watchlist limit from `5-20` to `2-10` per user (reduces ~56,000 to ~30,000 watchlist entries)
 
-This creates ~30,000 ratings instead of ~75,000 (load time: 1-2 minutes). The larger dataset is recommended for clearer performance demonstrations.
+This creates ~30,000 ratings and ~30,000 watchlist entries instead of ~75,000 and ~56,000 (load time: 1-2 minutes). The larger dataset is recommended for clearer performance demonstrations.
